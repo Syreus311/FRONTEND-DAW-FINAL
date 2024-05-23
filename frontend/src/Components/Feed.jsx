@@ -17,23 +17,17 @@ function Feed() {
     ];
 
     return (
+        <body>
         <div className="feed">
-            <div className="feed__header">
-                <h2>Home</h2>
-            </div>
             <TweetBox />
             {posts.map((post, index) => (
                 <Post
-                    key={index}
-                    displayName={post.displayName}
-                    username={post.username}
-                    verified={post.verified}
-                    text={post.text}
-                    image={post.image}
-                    avatar={post.avatar}
+                    
                 />
             ))}
         </div>
+
+        </body>
     );
 }
 
