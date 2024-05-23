@@ -1,31 +1,42 @@
-import React from 'react';
-import avatar from '../assets/2.png';
+import React, { useState } from 'react';
 import './TweetBox.css';
 
 function TweetBox() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const limitWords = (e) => {
+        const textarea = e.target;
+        const maxWords = 300;
+        const words = textarea.value.split(/\s+/);
+        if (words.length > maxWords) {
+            textarea.value = words.slice(0, maxWords).join(" ");
+        }
+    }
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    }
+
     return (
-        <div className="tweetBox">
-            <form>
-                <div className="tweetBox__input">
-                    <img src={avatar} alt="Avatar" className="tweetBox__avatar" />
-                    <input
-                        placeholder="What's happening?"
-                        type="text"
-                        className="tweetBox__inputField"
-                    />
+        <div className={`container ${isMenuOpen ? 'active' : ''}`}>
+            <button className="menu-button" onClick={toggleMenu}>☰ Menú</button>
+            <div className="left-column" id="left-column">
+                <div className="header">
+                    <div className="user-details">
+                        <button><img src="https://via.placeholder.com/30" alt="User" /></button>
+                        <span className="username">USUARIO</span>
+                    </div>
+                    <button className="logout-button">Log Out</button>
+                    <input type="text" placeholder="Buscar TextBite" />
+                    <img src="../../assets/logo.png" alt="User Image" class="user-image"></img>            
                 </div>
-                <input
-                    placeholder="Hashtags"
-                    type="text"
-                    className="tweetBox__imageInput"
-                />
-                <button
-                    type="submit"
-                    className="tweetBox__button"
-                >
-                    Tweet
-                </button>
-            </form>
+                <div className="new-post">
+                    <textarea id="post-text" placeholder="Inserte TextBite" onInput={limitWords}></textarea>
+                    <input type="text" placeholder="Inserte #" />
+                    <input type="file" placeholder="Agregar Imagen" />
+                    <button>CREAR TEXTBITE</button>
+                </div>
+            </div>
         </div>
     );
 }
