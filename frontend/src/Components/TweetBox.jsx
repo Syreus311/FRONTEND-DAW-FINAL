@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './TweetBox.css';
 
 function TweetBox() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [tweetText, setTweetText] = useState('');
+    const [hashtag, setHashtag] = useState('');
 
     const limitWords = (e) => {
         const textarea = e.target;
@@ -17,6 +19,34 @@ function TweetBox() {
         setIsMenuOpen(!isMenuOpen);
     }
 
+    const handleCreateTweet = async () => {
+        try {
+            const response = await fetch('/api/createPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: 'user_id_here', // replace with actual user ID
+                    text: tweetText,
+                    URL: '',
+                    hashtag: hashtag,
+                }),
+            });
+            if (response.ok) {
+                // Tweet created successfully
+                console.log('Tweet created successfully');
+                setTweetText('');
+                setHashtag('');
+            } else {
+                // Error creating tweet
+                console.error('Error creating tweet');
+            }
+        } catch (error) {
+            console.error('Error creating tweet:', error);
+        }
+    }
+
     return (
         <div className={`container ${isMenuOpen ? 'active' : ''}`}>
             <button className="menu-button" onClick={toggleMenu}>☰ Menú</button>
@@ -28,13 +58,24 @@ function TweetBox() {
                     </div>
                     <button className="logout-button">Log Out</button>
                     <input type="text" placeholder="Buscar TextBite" />
-                    <img src="../../assets/logo.png" alt="User Image" class="user-image"></img>            
+                    <img src="../../assets/logo.png" alt="User Image" className="user-image"></img>            
                 </div>
                 <div className="new-post">
-                    <textarea id="post-text" placeholder="Inserte TextBite" onInput={limitWords}></textarea>
-                    <input type="text" placeholder="Inserte #" />
+                    <textarea 
+                        id="post-text" 
+                        placeholder="Inserte TextBite" 
+                        value={tweetText}
+                        onChange={(e) => setTweetText(e.target.value)}
+                        onInput={limitWords}
+                    ></textarea>
+                    <input 
+                        type="text" 
+                        placeholder="Inserte #" 
+                        value={hashtag}
+                        onChange={(e) => setHashtag(e.target.value)}
+                    />
                     <input type="file" placeholder="Agregar Imagen" />
-                    <button>CREAR TEXTBITE</button>
+                    <button onClick={handleCreateTweet}>CREAR TEXTBITE</button>
                 </div>
             </div>
         </div>
